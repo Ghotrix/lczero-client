@@ -185,7 +185,12 @@ func createCmdWrapper() *cmdWrapper {
 
 func (c *cmdWrapper) launch(networkPath string, args []string, input bool) {
 	dir, _ := os.Getwd()
-	c.Cmd = exec.Command(path.Join(dir, "lc0"))
+    lc0_path, err := exec.LookPath("lc0")
+    if err != nil {
+	    c.Cmd = exec.Command(path.Join(dir, "lc0"))
+    } else {
+        c.Cmd = exec.Command(lc0_path)
+    }
 	c.Cmd.Args = append(c.Cmd.Args, args...)
 	c.Cmd.Args = append(c.Cmd.Args, fmt.Sprintf("--weights=%s", networkPath))
 	if *lc0Args != "" {
